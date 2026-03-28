@@ -1,0 +1,6 @@
+@TechBridgeDonation.API_HostAddress = http://localhost:5074
+
+GET {{TechBridgeDonation.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
