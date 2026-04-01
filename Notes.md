@@ -7,9 +7,9 @@ Use PostgreSQL.
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
-Right click on "Dependencies" and install Npgsql.EntityFrameworkCore.PostgreSQL with version 8.0.11
+Right click on "Dependencies" and install `Npgsql.EntityFrameworkCore.PostgreSQL` with version 8.0.11.
 
-Also install 8.0.11 for Microsoft.EntityFrameworkCore.Tools
+Also install 8.0.11 version of `Microsoft.EntityFrameworkCore.Tools`.
 
 ## Setup PostgreSQL database locally 
 
