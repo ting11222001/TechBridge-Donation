@@ -2,6 +2,8 @@
 
 Use PostgreSQL.
 
+<!-- --- -->
+
 ## NuGet package
 ```
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
@@ -42,15 +44,33 @@ Host: localhost
 Port: 5432
 Database: postgres
 Username: admin
-Password: password123
+Password: <local db password; refer to User Secrets section below>
 ```
 
 Click Test Connection.
 
 Click Finish. The database should show in the left panel.
 
+<!-- --- -->
+
 ## Program.cs
 ```
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 ```
+
+<!-- --- -->
+## User Secrets (local dev)
+
+Stores the DB connection string outside the project — never goes to git.
+```bash
+# Run inside TechBridgeDonation.API/
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:TechBridgeDonationConnectionString" "Host=localhost;Port=5432;Database=postgres;Username=admin;Password=YOUR_PASSWORD"
+dotnet user-secrets list  # verify
+```
+
+Secrets are saved to:
+`C:\Users\YOUR_NAME\AppData\Roaming\Microsoft\UserSecrets\`
+
+`appsettings.json` keeps an empty connection string. .NET merges both at runtime.

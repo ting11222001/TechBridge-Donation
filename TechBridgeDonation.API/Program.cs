@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TechBridgeDonation.API.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,3 +26,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// database (PostgreSQL) connection
+builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("TechBridgeDonationConnectionString")));
