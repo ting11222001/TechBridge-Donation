@@ -28,7 +28,6 @@ TechBridge is a device donation platform connecting businesses, refurbishers, an
 - Repository pattern with interfaces
 - AutoMapper (domain → DTO)
 - CRUD endpoints: Organisations, Devices
-- Filtering, sorting, pagination on Devices
 - JWT authentication (register + login)
 - Role-based authorization (Admin / Viewer)
 - Swagger UI with Bearer token support
@@ -36,6 +35,7 @@ TechBridge is a device donation platform connecting businesses, refurbishers, an
 <!-- --- -->
 
 ## In progress
+- Filtering, sorting, pagination on Devices
 - PostgreSQL swap (replacing SQL Server)
 - React frontend
 - Railway deployment
