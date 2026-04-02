@@ -10,6 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// database (PostgreSQL) connection
+builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("TechBridgeDonationConnectionString")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,7 +30,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// database (PostgreSQL) connection
-builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("TechBridgeDonationConnectionString")));

@@ -19,15 +19,15 @@ Also install 8.0.11 version of `Microsoft.EntityFrameworkCore.Tools`.
 
 In terminal:
 ```
-docker run --name postgres-techbridge-donation -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password123 -e POSTGRES_DB=mydb -p 5432:5432 -d postgres
+docker run --name postgres-techbridge-donation -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=YOUR_PASSWORD -e POSTGRES_DB=mydb -p 5432:5432 -d postgres
 ```
 
 What each flag does:
 ```
---name — gives the container a name
--e — sets environment variables (credentials)
--p 5432:5432 — maps container port to your machine
--d — runs in background
+--name:         gives the container a name
+-e:             sets environment variables (credentials)
+-p 5432:5432:   maps container port to your machine
+-d:             runs in background
 ```
 
 ### Step 2: Connect DBeaver to it
@@ -40,11 +40,11 @@ Choose PostgreSQL → click Next
 
 Fill in FieldValue: 
 ```
-Host: localhost
-Port: 5432
-Database: postgres
-Username: admin
-Password: <local db password; refer to User Secrets section below>
+Host:       localhost
+Port:       5432
+Database:   postgres
+Username:   admin
+Password:   <YOUR_LOCAL_DB_PASSWORD; refer to User Secrets section below>
 ```
 
 Click Test Connection.
@@ -67,7 +67,7 @@ Stores the DB connection string outside the project — never goes to git.
 # Run inside TechBridgeDonation.API/
 dotnet user-secrets init
 dotnet user-secrets set "ConnectionStrings:TechBridgeDonationConnectionString" "Host=localhost;Port=5432;Database=postgres;Username=admin;Password=YOUR_PASSWORD"
-dotnet user-secrets list  # verify
+dotnet user-secrets list  # verify e.g. it prints this: "ConnectionStrings:TechBridgeDonationConnectionString = Host=localhost;Port=5432;..."
 ```
 
 Secrets are saved to:
