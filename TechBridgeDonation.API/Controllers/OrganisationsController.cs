@@ -24,5 +24,21 @@ namespace TechBridgeDonation.API.Controllers
 
             return Ok(orgs);
         }
+
+        // GET SINGLE ORGs BY ID
+        // GET: https://localhost:portnumber/api/organisations/{id}
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public IActionResult GetById([FromRoute] Guid id)
+        {
+            var orgs = dbContext.Organisations.FirstOrDefault(x => x.Id == id); // x is just a name for each row as EF loops through. x.Id == id is the filter.
+
+            if (orgs == null) // If no match is found, it returns null instead of throwing an error. 
+            {
+                return NotFound();
+            }
+
+            return Ok(orgs);
+        }
     }
 }

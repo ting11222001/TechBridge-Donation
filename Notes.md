@@ -84,10 +84,17 @@ Go to Tools → NuGet Package Manager → Open "Package Manager Console":
 Add-Migration "Initial Migration"
 ```
 
-Apply changes e.g. creating or updating database tables:
+Apply changes:
 ```
 Update-Database
 ```
+
+*If ever needed to drop and recreate the database when a model is changed or updating seed data:
+```
+Drop-Database           deletes everything
+Update-Database         recreates the schema by running all migrations
+```
+
 
 The new tables are under Schemas > public > Tables:
 ```
@@ -367,3 +374,9 @@ SeedAsync()        → hits if (db.Donations.Any())
     ↓
 App continues
 ```
+
+## Route constraints in Controllers
+
+`[Route("{id:Guid}")]` tells the router to expect a value at `{id}` in the URL, e.g. `/api/organisations/abc-123-...`.
+
+`:Guid` means it only matches if the value is a valid Guid.
