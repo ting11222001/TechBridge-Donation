@@ -27,7 +27,7 @@
 
         // FK → User who changed status
         public Guid? StatusChangedBy { get; set; }
-        public User StatusChangedByUser { get; set; }
+        //public User StatusChangedByUser { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

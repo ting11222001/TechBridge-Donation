@@ -19,7 +19,7 @@ Also install 8.0.11 version of `Microsoft.EntityFrameworkCore.Tools`.
 
 In terminal:
 ```
-docker run --name postgres-techbridge-donation -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=YOUR_PASSWORD -e POSTGRES_DB=mydb -p 5432:5432 -d postgres
+docker run --name postgres-techbridge-donation -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=YOUR_LOCAL_DB_PASSWORD -e POSTGRES_DB=dev_techbridge_donation -p 5432:5432 -d postgres
 ```
 
 What each flag does:
@@ -42,7 +42,7 @@ Fill in FieldValue:
 ```
 Host:       localhost
 Port:       5432
-Database:   postgres
+Database:   dev_techbridge_donation
 Username:   admin
 Password:   <YOUR_LOCAL_DB_PASSWORD; refer to User Secrets section below>
 ```
@@ -66,7 +66,7 @@ Stores the DB connection string outside the project — never goes to git.
 ```bash
 # Run inside TechBridgeDonation.API/
 dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:TechBridgeDonationConnectionString" "Host=localhost;Port=5432;Database=postgres;Username=admin;Password=YOUR_PASSWORD"
+dotnet user-secrets set "ConnectionStrings:TechBridgeDonationConnectionString" "Host=localhost;Port=5432;Database=dev_techbridge_donation;Username=admin;Password=YOUR_PASSWORD"
 dotnet user-secrets list  # verify e.g. it prints this: "ConnectionStrings:TechBridgeDonationConnectionString = Host=localhost;Port=5432;..."
 ```
 
@@ -74,3 +74,29 @@ Secrets are saved to:
 `C:\Users\YOUR_NAME\AppData\Roaming\Microsoft\UserSecrets\`
 
 `appsettings.json` keeps an empty connection string. .NET merges both at runtime.
+
+<!-- --- -->
+
+## Run EF Core migrations
+
+Go to Tools → NuGet Package Manager → Open "Package Manager Console":
+```
+Add-Migration "Initial Migration"
+```
+
+Apply changes e.g. creating or updating database tables:
+```
+Update-Database
+```
+
+The tables are under Schemas > public > Tables:
+```
+dev_techbridge_donation
+  └── Schemas
+        └── public
+              └── Tables   ← your tables are here
+                    ├── Organisations
+                    ├── Donations
+                    ├── Devices
+                    └── __EFMigrationsHistory
+```
