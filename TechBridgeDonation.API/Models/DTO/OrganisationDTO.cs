@@ -1,0 +1,20 @@
+﻿using TechBridgeDonation.API.Models.Domain;
+
+namespace TechBridgeDonation.API.Models.DTO
+{
+    public class OrganisationDTO
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public OrganisationType Type { get; set; }
+        public string ContactEmail { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? Address { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }  // soft delete
+
+        // Left out the navigation properties and enums
+    }
+}
