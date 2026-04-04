@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TechBridgeDonation.API.Data;
+using TechBridgeDonation.API.Models.Domain;
 using TechBridgeDonation.API.Models.DTO;
 
 namespace TechBridgeDonation.API.Controllers
@@ -25,11 +26,11 @@ namespace TechBridgeDonation.API.Controllers
             var organisationDomain = dbContext.Organisations.ToList();
 
             // Map domain models to DTOs
-            var organisastionsDTO = new List<OrganisationDTO>();
+            var organisastionsDTO = new List<OrganisationDto>();
 
             foreach (var organisation in organisationDomain)
             {
-                organisastionsDTO.Add(new OrganisationDTO()
+                organisastionsDTO.Add(new OrganisationDto()
                 {
                     Id = organisation.Id,
                     Name = organisation.Name,
@@ -61,7 +62,7 @@ namespace TechBridgeDonation.API.Controllers
             }
 
             // Map domain models to DTOs
-            var organisastionDTO = new OrganisationDTO()
+            var organisationDTO = new OrganisationDto()
             {
                 Id = organisationDomain.Id,
                 Name = organisationDomain.Name,
@@ -75,7 +76,81 @@ namespace TechBridgeDonation.API.Controllers
             };
 
             // Return DTOs
-            return Ok(organisastionDTO);
+            return Ok(organisationDTO);
+        }
+
+        // POST to Create New Organisation
+        // POST: https://localhost:portnumber/api/organisations
+        [HttpPost]
+        public IActionResult Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
+        {
+            // Map or Convert DTO to Domain Model
+            var organisationDomainModel = new Organisation
+            {
+                Name = addOrganisationRequestDto.Name,
+                Type = addOrganisationRequestDto.Type,
+                ContactEmail = addOrganisationRequestDto.ContactEmail,
+                ContactPhone = addOrganisationRequestDto.ContactPhone,
+                Address = addOrganisationRequestDto.Address,
+            };
+
+            // Use Domain Model to create Organisation
+            dbContext.Organisations.Add(organisationDomainModel);
+            dbContext.SaveChanges();
+
+
+            // Map Domain Model back to DTO to send the result back to frontend
+            var organisationDto = new OrganisationDto
+            {
+                Name = organisationDomainModel.Name,
+                Type = organisationDomainModel.Type,
+                ContactEmail = organisationDomainModel.ContactEmail,
+                ContactPhone = organisationDomainModel.ContactPhone,
+                Address = organisationDomainModel.Address,
+            };
+
+
+            return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
+        }
+
+        // PUT to Update Organisation
+        // PUT: https://localhost:portnumber/api/organisations/{id}
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
+        {
+            // Check if Organisation exists
+            var organisationDomainModel = dbContext.Organisations.FirstOrDefault(x => x.Id == id);
+
+            if (organisationDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
+            {
+                return NotFound();
+            }
+
+            // Map or Convert DTO to Domain Model
+            organisationDomainModel.Name = updateOrganisationRequestDto.Name;
+            organisationDomainModel.Type = updateOrganisationRequestDto.Type;
+            organisationDomainModel.ContactEmail = updateOrganisationRequestDto.ContactEmail;
+            organisationDomainModel.ContactPhone = updateOrganisationRequestDto.ContactPhone;
+            organisationDomainModel.Address = updateOrganisationRequestDto.Address;
+
+
+            dbContext.SaveChanges();
+
+
+            // Map Domain Model back to DTO to send the result back to frontend
+            var organisationDto = new OrganisationDto
+            {
+                Name = organisationDomainModel.Name,
+                Type = organisationDomainModel.Type,
+                ContactEmail = organisationDomainModel.ContactEmail,
+                ContactPhone = organisationDomainModel.ContactPhone,
+                Address = organisationDomainModel.Address,
+            };
+
+
+            // Return DTOs
+            return Ok(organisationDto);
         }
     }
 }
