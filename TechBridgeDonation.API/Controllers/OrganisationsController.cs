@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Models.Domain;
 using TechBridgeDonation.API.Models.DTO;
@@ -20,10 +21,10 @@ namespace TechBridgeDonation.API.Controllers
         // GET ALL ORGs
         // GET: https://localhost:portnumber/api/organisations
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             // Get data from database - Org models
-            var organisationDomain = dbContext.Organisations.ToList();
+            var organisationDomain = await dbContext.Organisations.ToListAsync();
 
             // Map domain models to DTOs
             var organisastionsDTO = new List<OrganisationDto>();
@@ -52,9 +53,9 @@ namespace TechBridgeDonation.API.Controllers
         // GET: https://localhost:portnumber/api/organisations/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetById([FromRoute] Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var organisationDomain = dbContext.Organisations.FirstOrDefault(x => x.Id == id); // x is just a name for each row as EF loops through. x.Id == id is the filter.
+            var organisationDomain = await dbContext.Organisations.FirstOrDefaultAsync(x => x.Id == id); // x is just a name for each row as EF loops through. x.Id == id is the filter.
 
             if (organisationDomain == null) // If no match is found, it returns null instead of throwing an error. 
             {
@@ -82,7 +83,7 @@ namespace TechBridgeDonation.API.Controllers
         // POST to Create New Organisation
         // POST: https://localhost:portnumber/api/organisations
         [HttpPost]
-        public IActionResult Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
+        public async Task<IActionResult> Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
         {
             // Map or Convert DTO to Domain Model
             var organisationDomainModel = new Organisation
@@ -95,8 +96,8 @@ namespace TechBridgeDonation.API.Controllers
             };
 
             // Use Domain Model to create Organisation
-            dbContext.Organisations.Add(organisationDomainModel);
-            dbContext.SaveChanges();
+            await dbContext.Organisations.AddAsync(organisationDomainModel);
+            await dbContext.SaveChangesAsync();
 
 
             // Map Domain Model back to DTO to send the result back to frontend
@@ -117,10 +118,10 @@ namespace TechBridgeDonation.API.Controllers
         // PUT: https://localhost:portnumber/api/organisations/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
         {
             // Check if Organisation exists
-            var organisationDomainModel = dbContext.Organisations.FirstOrDefault(x => x.Id == id);
+            var organisationDomainModel = await dbContext.Organisations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (organisationDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
             {
@@ -135,7 +136,7 @@ namespace TechBridgeDonation.API.Controllers
             organisationDomainModel.Address = updateOrganisationRequestDto.Address;
 
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
 
             // Map Domain Model back to DTO to send the result back to frontend
@@ -157,10 +158,10 @@ namespace TechBridgeDonation.API.Controllers
         // DELETE: https://localhost:portnumber/api/organisations/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             // Check if Organisation exists
-            var organisationDomainModel = dbContext.Organisations.FirstOrDefault(x => x.Id == id);
+            var organisationDomainModel = await dbContext.Organisations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (organisationDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
             {
@@ -169,7 +170,7 @@ namespace TechBridgeDonation.API.Controllers
 
             // Delete the Organisation
             dbContext.Organisations.Remove(organisationDomainModel);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             // Return delete Organistaion back to client
             // Map Organisation Model to DTO

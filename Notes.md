@@ -13,6 +13,8 @@ Right click on "Dependencies" and install `Npgsql.EntityFrameworkCore.PostgreSQL
 
 Also install 8.0.11 version of `Microsoft.EntityFrameworkCore.Tools`.
 
+<!-- --- -->
+
 ## Setup PostgreSQL database locally 
 
 ### Step 1:  Run PostgreSQL in Docker
@@ -60,6 +62,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 ```
 
 <!-- --- -->
+
 ## User Secrets (local dev)
 
 Stores the DB connection string outside the project — never goes to git.
@@ -295,6 +298,7 @@ builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
 | `TechBridgeDonationDbContext` | Service to inject |
 | `options => options.UseNpgsql(...)` | How to configure/create it |
 
+<!-- --- -->
 
 ## OrganisationsController
 
@@ -360,6 +364,7 @@ public OrganisationsController(TechBridgeDonationDbContext dbContext)
 
 ASP.NET Core's dependency injection (DI) container creates the `TechBridgeDonationDbContext` and passes it in automatically. The controller does not need to create it manually. This keeps the code loosely coupled and easy to test.
 
+<!-- --- -->
 
 ## Seeding database
 
@@ -375,8 +380,17 @@ SeedAsync()        → hits if (db.Donations.Any())
 App continues
 ```
 
+<!-- --- -->
+
 ## Route constraints in Controllers
 
 `[Route("{id:Guid}")]` tells the router to expect a value at `{id}` in the URL, e.g. `/api/organisations/abc-123-...`.
 
 `:Guid` means it only matches if the value is a valid Guid.
+
+<!-- --- -->
+
+## Engineering Highlights
+
+- Controllers: Implemented Async Await in the action methods.
+- DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers.
