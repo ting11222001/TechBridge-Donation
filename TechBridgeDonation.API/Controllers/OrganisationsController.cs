@@ -152,5 +152,37 @@ namespace TechBridgeDonation.API.Controllers
             // Return DTOs
             return Ok(organisationDto);
         }
+
+        // Delete one Organisation
+        // DELETE: https://localhost:portnumber/api/organisations/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            // Check if Organisation exists
+            var organisationDomainModel = dbContext.Organisations.FirstOrDefault(x => x.Id == id);
+
+            if (organisationDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
+            {
+                return NotFound();
+            }
+
+            // Delete the Organisation
+            dbContext.Organisations.Remove(organisationDomainModel);
+            dbContext.SaveChanges();
+
+            // Return delete Organistaion back to client
+            // Map Organisation Model to DTO
+            var organisationDto = new OrganisationDto
+            {
+                Name = organisationDomainModel.Name,
+                Type = organisationDomainModel.Type,
+                ContactEmail = organisationDomainModel.ContactEmail,
+                ContactPhone = organisationDomainModel.ContactPhone,
+                Address = organisationDomainModel.Address,
+            };
+
+            return Ok(organisationDto);
+        }
     }
 }
