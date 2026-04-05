@@ -103,6 +103,7 @@ namespace TechBridgeDonation.API.Controllers
             // Map Domain Model back to DTO to send the result back to frontend
             var organisationDto = new OrganisationDto
             {
+                Id = organisationDomainModel.Id,
                 Name = organisationDomainModel.Name,
                 Type = organisationDomainModel.Type,
                 ContactEmail = organisationDomainModel.ContactEmail,
@@ -142,6 +143,7 @@ namespace TechBridgeDonation.API.Controllers
             // Map Domain Model back to DTO to send the result back to frontend
             var organisationDto = new OrganisationDto
             {
+                Id = organisationDomainModel.Id,
                 Name = organisationDomainModel.Name,
                 Type = organisationDomainModel.Type,
                 ContactEmail = organisationDomainModel.ContactEmail,
@@ -176,6 +178,7 @@ namespace TechBridgeDonation.API.Controllers
             // Map Organisation Model to DTO
             var organisationDto = new OrganisationDto
             {
+                Id = organisationDomainModel.Id,
                 Name = organisationDomainModel.Name,
                 Type = organisationDomainModel.Type,
                 ContactEmail = organisationDomainModel.ContactEmail,

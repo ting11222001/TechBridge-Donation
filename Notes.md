@@ -393,4 +393,5 @@ App continues
 ## Engineering Highlights
 
 - Controllers: Implemented Async Await in the action methods.
-- DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers.
+- DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers, so client --> DTO --> APIs in controller --> domain model --> database.
+- Repository: Implemented to separate the data acess layr from the application, so controller --> repository --> database.
