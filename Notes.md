@@ -437,6 +437,69 @@ public class OrganisationDto { public Guid Id { get; set; } ... }
 
 <!-- --- -->
 
+## Implement AutoMapper
+
+Right click on "Dependencies" and install `AutoMapper` with version 16.1.1.
+
+Create a new folder `Mappings`.
+
+### AutoMapperProfiles
+
+Create `Mappings/AutoMapperProfiles.cs`. This file defines how to convert between domain models and DTOs in both directions (`.ReverseMap()`):
+```csharp
+namespace TechBridgeDonation.API.Mappings
+{
+    public class AutoMapperProfiles : Profile
+    {
+        public AutoMapperProfiles()
+        {
+            CreateMap<Organisation, OrganisationDto>().ReverseMap();
+            CreateMap<AddOrganisationRequestDto, Organisation>().ReverseMap();
+            CreateMap<UpdateOrganisationRequestDto, Organisation>().ReverseMap();
+        }
+    }
+}
+```
+
+### Register AutoMapper in Program.cs
+
+AutoMapper 16+ removed assembly scanning. You must register each profile explicitly using a config action:
+```csharp
+// Inject automapper
+builder.Services.AddAutoMapper(configuration => configuration.AddProfile<AutoMapperProfiles>());
+```
+
+> In older versions (v12 and below), `AddAutoMapper()` with no arguments worked. From v13+, you had to pass an assembly. From v16+, you must pass a config action with explicit profiles.
+
+### Use AutoMapper in the Controller
+
+Before AutoMapper, mapping was manual:
+```csharp
+var organisationDTO = new OrganisationDto()
+{
+    Id = organisationDomain.Id,
+    Name = organisationDomain.Name,
+    Type = organisationDomain.Type,
+    ContactEmail = organisationDomain.ContactEmail,
+    ContactPhone = organisationDomain.ContactPhone,
+    Address = organisationDomain.Address,
+    CreatedAt = organisationDomain.CreatedAt,
+    UpdatedAt = organisationDomain.UpdatedAt,
+    DeletedAt = organisationDomain.DeletedAt
+};
+```
+
+With AutoMapper, this becomes one line:
+```csharp
+// Map domain model to DTO (with AutoMapper)
+var organisationDto = mapper.Map<OrganisationDto>(organisationDomain);
+```
+
+AutoMapper reads the profile and handles the property copying automatically.
+
+
+<!-- --- -->
+
 ## Engineering Highlights
 
 - Controllers: Implemented Async Await in the action methods.

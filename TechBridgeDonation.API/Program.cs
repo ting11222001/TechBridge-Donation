@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Data.Seeders;
+using TechBridgeDonation.API.Mappings;
 using TechBridgeDonation.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
 
 // Inject repositories
 builder.Services.AddScoped<IOrganisationRepository, SQLOrganisationRepository>();
+
+// Inject automapper
+builder.Services.AddAutoMapper(configuration => configuration.AddProfile<AutoMapperProfiles>());
 
 var app = builder.Build();
 

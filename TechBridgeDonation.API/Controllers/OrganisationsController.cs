@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Models.Domain;
 using TechBridgeDonation.API.Models.DTO;
@@ -13,11 +14,16 @@ namespace TechBridgeDonation.API.Controllers
     {
         private readonly TechBridgeDonationDbContext dbContext;
         private readonly IOrganisationRepository organisationRepository;
+        private readonly IMapper mapper;
 
-        public OrganisationsController(TechBridgeDonationDbContext dbContext, IOrganisationRepository organisationRepository)
+        public OrganisationsController(
+            TechBridgeDonationDbContext dbContext,
+            IOrganisationRepository organisationRepository,
+            IMapper mapper)
         {
             this.dbContext = dbContext;
             this.organisationRepository = organisationRepository;
+            this.mapper = mapper;
         }
 
         // GET ALL ORGs
@@ -25,30 +31,14 @@ namespace TechBridgeDonation.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            // Get data from database - Org models
-            var organisationDomain = await organisationRepository.GetAllAsync();
+            // Get a list of Organisation Domain Models from database
+            var organisationsDomainModel = await organisationRepository.GetAllAsync();
 
-            // Map domain models to DTOs
-            var organisastionsDTO = new List<OrganisationDto>();
-
-            foreach (var organisation in organisationDomain)
-            {
-                organisastionsDTO.Add(new OrganisationDto()
-                {
-                    Id = organisation.Id,
-                    Name = organisation.Name,
-                    Type = organisation.Type,
-                    ContactEmail = organisation.ContactEmail,
-                    ContactPhone = organisation.ContactPhone,
-                    Address = organisation.Address,
-                    CreatedAt = organisation.CreatedAt,
-                    UpdatedAt = organisation.UpdatedAt,
-                    DeletedAt = organisation.DeletedAt
-                });
-            }
+            // Map domain models to DTOs (with AutoMapper)
+            var organisastionsDto = mapper.Map<List<OrganisationDto>>(organisationsDomainModel);
 
             // Return DTOs
-            return Ok(organisastionsDTO);
+            return Ok(organisastionsDto);
         }
 
         // GET SINGLE ORGs BY ID
@@ -64,22 +54,11 @@ namespace TechBridgeDonation.API.Controllers
                 return NotFound();
             }
 
-            // Map domain models to DTOs
-            var organisationDTO = new OrganisationDto()
-            {
-                Id = organisationDomain.Id,
-                Name = organisationDomain.Name,
-                Type = organisationDomain.Type,
-                ContactEmail = organisationDomain.ContactEmail,
-                ContactPhone = organisationDomain.ContactPhone,
-                Address = organisationDomain.Address,
-                CreatedAt = organisationDomain.CreatedAt,
-                UpdatedAt = organisationDomain.UpdatedAt,
-                DeletedAt = organisationDomain.DeletedAt
-            };
+            // Map domain model to DTO (with AutoMapper)
+            var organisationDto = mapper.Map<OrganisationDto>(organisationDomain);
 
-            // Return DTOs
-            return Ok(organisationDTO);
+            // Return DTO
+            return Ok(organisationDto);
         }
 
         // POST to Create New Organisation
@@ -87,30 +66,14 @@ namespace TechBridgeDonation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
         {
-            // Map or Convert DTO to Domain Model
-            var organisationDomainModel = new Organisation
-            {
-                Name = addOrganisationRequestDto.Name,
-                Type = addOrganisationRequestDto.Type,
-                ContactEmail = addOrganisationRequestDto.ContactEmail,
-                ContactPhone = addOrganisationRequestDto.ContactPhone,
-                Address = addOrganisationRequestDto.Address,
-            };
+            // Map DTO to Domain Model (with AutoMapper)
+            var organisationDomainModel = mapper.Map<Organisation>(addOrganisationRequestDto);
 
             // Use Domain Model to create Organisation
             organisationDomainModel = await organisationRepository.CreateAsync(organisationDomainModel);
 
-            // Map Domain Model back to DTO to send the result back to frontend
-            var organisationDto = new OrganisationDto
-            {
-                Id = organisationDomainModel.Id,
-                Name = organisationDomainModel.Name,
-                Type = organisationDomainModel.Type,
-                ContactEmail = organisationDomainModel.ContactEmail,
-                ContactPhone = organisationDomainModel.ContactPhone,
-                Address = organisationDomainModel.Address,
-            };
-
+            // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
+            var organisationDto = mapper.Map<OrganisationDto>(organisationDomainModel);
 
             return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
         }
@@ -122,14 +85,7 @@ namespace TechBridgeDonation.API.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
         {
             // Map DTO to Domain Model
-            var updateOrganisationDomainModel = new Organisation
-            {
-                Name = updateOrganisationRequestDto.Name,
-                Type = updateOrganisationRequestDto.Type,
-                ContactEmail = updateOrganisationRequestDto.ContactEmail,
-                ContactPhone = updateOrganisationRequestDto.ContactPhone,
-                Address = updateOrganisationRequestDto.Address,
-            };
+            var updateOrganisationDomainModel = mapper.Map<Organisation>(updateOrganisationRequestDto);
 
             var updatedOrganisationDomainModel = await organisationRepository.UpdateAsync(id, updateOrganisationDomainModel);
 
@@ -139,16 +95,8 @@ namespace TechBridgeDonation.API.Controllers
             }
 
             // Return the updated Organistaion back to client
-            // Map Domain Model to DTO
-            var organisationDto = new OrganisationDto
-            {
-                Id = updatedOrganisationDomainModel.Id,
-                Name = updatedOrganisationDomainModel.Name,
-                Type = updatedOrganisationDomainModel.Type,
-                ContactEmail = updatedOrganisationDomainModel.ContactEmail,
-                ContactPhone = updatedOrganisationDomainModel.ContactPhone,
-                Address = updatedOrganisationDomainModel.Address,
-            };
+            // Map Domain Model to DTO (with AutoMapper)
+            var organisationDto = mapper.Map<OrganisationDto>(updatedOrganisationDomainModel);
 
 
             // Return DTOs
@@ -170,15 +118,7 @@ namespace TechBridgeDonation.API.Controllers
 
             // Return the deleted Organistaion back to client
             // Map Domain Model to DTO
-            var organisationDto = new OrganisationDto
-            {
-                Id = deletedOrganisationDomainModel.Id,
-                Name = deletedOrganisationDomainModel.Name,
-                Type = deletedOrganisationDomainModel.Type,
-                ContactEmail = deletedOrganisationDomainModel.ContactEmail,
-                ContactPhone = deletedOrganisationDomainModel.ContactPhone,
-                Address = deletedOrganisationDomainModel.Address,
-            };
+            var organisationDto = mapper.Map<OrganisationDto>(deletedOrganisationDomainModel);
 
             return Ok(organisationDto);
         }
