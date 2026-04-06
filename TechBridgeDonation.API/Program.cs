@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Data.Seeders;
+using TechBridgeDonation.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddSwaggerGen();
 // database (PostgreSQL) connection
 builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TechBridgeDonationConnectionString")));
+
+// Inject repositories
+builder.Services.AddScoped<IOrganisationRepository, SQLOrganisationRepository>();
 
 var app = builder.Build();
 
