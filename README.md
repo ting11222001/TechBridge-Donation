@@ -5,6 +5,14 @@ TechBridge is a device donation platform connecting businesses, refurbishers, an
 [About the TechBridge project](https://tech-bridge-landing-page.vercel.app/) · Donation Module (Frontend Repo) (coming soon) · [Invoice Module Live Demo](https://tech-bridge-invoice-app.vercel.app/) · [Invoice Module (Frontend repo)](https://github.com/ting11222001/TechBridge-Invoice-app) · [Invoice Module (Backend repo)](https://github.com/ting11222001/TechBridge-Invoice)
 
 
+## Demo
+
+`GET /api/organisations`, seeded data returned from PostgreSQL:
+![GET organisations response](demo/get-all-orgs.png)
+
+Swagger endpoint list:
+![Swagger endpoints](demo/the-full-list-of-endpoints.png)
+
 
 ## Table of Contents
 
