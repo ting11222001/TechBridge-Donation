@@ -31,11 +31,8 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<TechBridgeDonationDbContext>();
     await db.Database.MigrateAsync();
     await OrganisationSeeder.SeedAsync(db);
-
     await DonationSeeder.SeedAsync(db, OrganisationSeeder.DonorOrgId); // A donation from a business donor organisation
-
-    var donationId = Guid.Parse("b1000000-0000-0000-0000-000000000001"); // A donation with the status of DonationStatus.Submitted
-    await DeviceSeeder.SeedAsync(db, donationId, OrganisationSeeder.RefurbOrgId);
+    await DeviceSeeder.SeedAsync(db, DonationSeeder.SubmittedDonationId, OrganisationSeeder.RefurbOrgId); // A donation with the status of DonationStatus.Submitted
 }
 
 // Configure the HTTP request pipeline.

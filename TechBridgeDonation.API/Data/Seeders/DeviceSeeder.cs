@@ -24,8 +24,8 @@ namespace TechBridgeDonation.API.Data.Seeders
                     TechnicalNotes = "Missing charger",
                     WipeCompleted = false,
                     RefurbCompleted = false,
-                    CreatedAt = new DateTime(2024, 3, 2, 0, 0, 0, DateTimeKind.Utc),
-                    UpdatedAt = new DateTime(2024, 3, 2, 0, 0, 0, DateTimeKind.Utc)
+                    CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, DateTimeKind.Utc),
+                    UpdatedAt = new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc)
                 },
                 new Device
                 {
@@ -40,8 +40,8 @@ namespace TechBridgeDonation.API.Data.Seeders
                     TechnicalNotes = null,
                     WipeCompleted = true,
                     RefurbCompleted = true,
-                    CreatedAt = new DateTime(2024, 3, 2, 0, 0, 0, DateTimeKind.Utc),
-                    UpdatedAt = new DateTime(2024, 3, 2, 0, 0, 0, DateTimeKind.Utc)
+                    CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+                    UpdatedAt = new DateTime(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc)
                 }
             };
 
