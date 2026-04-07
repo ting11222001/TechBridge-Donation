@@ -94,7 +94,7 @@ Update-Database
 
 *If ever needed to drop and recreate the database when a model is changed or updating seed data:
 ```
-Drop-Database           deletes everything
+Drop-Database           deletes the entire database, so be careful!
 Update-Database         recreates the schema by running all migrations
 ```
 
@@ -496,6 +496,51 @@ var organisationDto = mapper.Map<OrganisationDto>(organisationDomain);
 ```
 
 AutoMapper reads the profile and handles the property copying automatically.
+
+
+<!-- --- -->
+
+## 
+
+In TechBridgeDonationDbContext, add this:
+
+```
+// Another way to seed data
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    // Seed data for Organisations
+    var organisations = new List<Organisation>
+    {
+        new Organisation
+        {
+            Id = Guid.NewGuid(),
+            Name = "Adelaide Electronics Pty Ltd",
+            Type = OrganisationType.RefurbPartner,
+            ContactEmail = "fix@adlElect.com.au",
+            ContactPhone = "0412345678",
+            Address = "60 King William St, Adelaide SA 5000",
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        }
+    };
+
+    modelBuilder.Entity<Organisation>().HasData(organisations);
+}
+```
+
+Then, in Package Manager Console, run:
+```
+Add-Migration "Name of the migration"
+```
+
+Then, run this to apply the changes:
+```
+Update-Database
+```
+
+Open the `Organisations` table and hit `refresh` to confirm if the new row is inserted.
 
 
 <!-- --- -->
