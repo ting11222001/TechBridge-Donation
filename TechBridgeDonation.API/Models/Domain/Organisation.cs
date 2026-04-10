@@ -14,7 +14,8 @@
         public DateTime? DeletedAt { get; set; }  // soft delete
 
         // Navigation properties
-        public ICollection<Device> AssignedDevices { get; set; }  // devices assigned to this org
+        public ICollection<Donation> Donations { get; set; }        // donations made by this org (donor business): "one organisation has many donations"
+        public ICollection<Device> AssignedDevices { get; set; }    // devices assigned to this org (refurb partner): "one device can be assigned to one refurb partner" relationship
     }
 
     public enum OrganisationType

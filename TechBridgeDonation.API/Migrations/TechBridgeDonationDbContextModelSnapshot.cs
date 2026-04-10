@@ -82,7 +82,7 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasIndex("DonationId");
 
-                    b.ToTable("Devices");
+                    b.ToTable("Devices", (string)null);
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Donation", b =>
@@ -113,7 +113,7 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasIndex("OrganisationId");
 
-                    b.ToTable("Donations");
+                    b.ToTable("Donations", (string)null);
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Organisation", b =>
@@ -150,7 +150,7 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisations");
+                    b.ToTable("Organisations", (string)null);
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Device", b =>
