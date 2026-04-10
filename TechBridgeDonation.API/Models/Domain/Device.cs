@@ -16,8 +16,8 @@
         public DeviceStatus Status { get; set; }
 
         // FK → Organisation (refurb partner)
-        public Guid? AssignedPartnerId { get; set; }
-        public Organisation AssignedPartner { get; set; }
+        public Guid? AssignedRefurbPartnerId { get; set; }
+        public Organisation AssignedRefurbPartner { get; set; }
 
         public string? TechnicalNotes { get; set; }
         public bool WipeCompleted { get; set; }
