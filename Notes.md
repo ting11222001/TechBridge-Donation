@@ -545,6 +545,18 @@ Open the `Organisations` table and hit `refresh` to confirm if the new row is in
 
 <!-- --- -->
 
+## Domain Model Relationships
+
+Phase 1:
+
+- **One organisation has many users**
+- **One organisation can make many donations**
+- **One donation has many devices**
+- **One device belongs to one donation**
+- **One device can be assigned to one refurb partner (organisation)**
+
+<!-- --- -->
+
 ## Engineering Highlights
 
 - Controllers: Implemented Async Await in the action methods.
