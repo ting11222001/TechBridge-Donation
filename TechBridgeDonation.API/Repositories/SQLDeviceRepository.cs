@@ -22,14 +22,17 @@ namespace TechBridgeDonation.API.Repositories
         public async Task<Device?> DeleteAsync(Guid id)
         {
             // Check if Device exists
-            var existingDeviceDomainModel = await dbContext.Devices.FirstOrDefaultAsync(x => x.Id == id);
+            var existingDeviceDomainModel = await dbContext.Devices
+                .Include("DeviceCondition")
+                .Include("DeviceStatus")
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingDeviceDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
             {
                 return null;
             }
 
-            // Delete the Organisation
+            // Delete the Device
             dbContext.Devices.Remove(existingDeviceDomainModel);
             await dbContext.SaveChangesAsync();
 
