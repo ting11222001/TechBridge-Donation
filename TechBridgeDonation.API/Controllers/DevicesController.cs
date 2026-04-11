@@ -79,5 +79,50 @@ namespace TechBridgeDonation.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = deviceDto.Id }, deviceDto);
         }
 
+
+        // PUT to Update Device
+        // PUT: https://localhost:portnumber/api/devices/{id}
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateDeviceRequestDto updateDeviceRequestDto)
+        {
+            // Map DTO to Domain Model
+            var updateDeviceDomainModel = mapper.Map<Device>(updateDeviceRequestDto);
+
+            var updatedDeviceDomainModel = await deviceRepository.UpdateAsync(id, updateDeviceDomainModel);
+
+            if (updatedDeviceDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            // Return the updated Device back to client
+            // Map Domain Model to DTO (with AutoMapper)
+            var deviceDto = mapper.Map<DeviceDto>(updatedDeviceDomainModel);
+
+            // Return DTOs
+            return Ok(deviceDto);
+        }
+
+        // Delete one Device
+        // DELETE: https://localhost:portnumber/api/devices/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            var deletedDeviceDomainModel = await deviceRepository.DeleteAsync(id);
+
+            if (deletedDeviceDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            // Return the deleted Device back to client
+            // Map Domain Model to DTO
+            var deviceDto = mapper.Map<DeviceDto>(deletedDeviceDomainModel);
+
+            return Ok(deviceDto);
+        }
+
     }
 }

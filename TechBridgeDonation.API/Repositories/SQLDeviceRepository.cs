@@ -19,26 +19,65 @@ namespace TechBridgeDonation.API.Repositories
             return device;
         }
 
-        public Task<Device?> DeleteAsync(Guid id)
+        public async Task<Device?> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Check if Device exists
+            var existingDeviceDomainModel = await dbContext.Devices.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingDeviceDomainModel == null) // If no match is found, it returns null instead of throwing an error. 
+            {
+                return null;
+            }
+
+            // Delete the Organisation
+            dbContext.Devices.Remove(existingDeviceDomainModel);
+            await dbContext.SaveChangesAsync();
+
+            return existingDeviceDomainModel;
         }
 
         public async Task<List<Device>> GetAllAsync()
         {
             //return await dbContext.Devices.ToListAsync();
-            return await dbContext.Devices.Include("DeviceCondition").Include("DeviceStatus").ToListAsync();
+            return await dbContext.Devices
+                .Include("DeviceCondition")
+                .Include("DeviceStatus")
+                .ToListAsync();
         }
 
 
         public async Task<Device?> GetByIdAsync(Guid id)
         {
-            return await dbContext.Devices.FirstOrDefaultAsync(x => x.Id == id);
+            return await dbContext.Devices
+                .Include("DeviceCondition")
+                .Include("DeviceStatus")
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<Device?> UpdateAsync(Guid id, Device device)
+        public async Task<Device?> UpdateAsync(Guid id, Device device)
         {
-            throw new NotImplementedException();
+            // Check if Device exists
+            var existingDeviceDomainModel = await dbContext.Devices
+                .Include("DeviceCondition")
+                .Include("DeviceStatus")
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingDeviceDomainModel == null)
+            {
+                return null;
+            }
+
+            // Map or Convert DTO to Domain Model
+            existingDeviceDomainModel.DonationId = device.DonationId;
+            existingDeviceDomainModel.DeviceType = device.DeviceType;
+            existingDeviceDomainModel.Brand = device.Brand;
+            existingDeviceDomainModel.Model = device.Model;
+            existingDeviceDomainModel.DeviceConditionId = device.DeviceConditionId;
+            existingDeviceDomainModel.DeviceStatusId = device.DeviceStatusId;
+
+            await dbContext.SaveChangesAsync();
+
+            return existingDeviceDomainModel;
         }
     }
 }
