@@ -8,7 +8,10 @@
         public Guid OrganisationId { get; set; }
         public Organisation Organisation { get; set; }
 
+        // FK → DonationStatus table
+        public int DonationStatusId { get; set; }
         public DonationStatus Status { get; set; }
+
         public string? Notes { get; set; }
         public DateTime? SubmittedAt { get; set; }
 
@@ -19,11 +22,15 @@
         public ICollection<Device> Devices { get; set; }
     }
 
-    public enum DonationStatus
-    {
-        Draft,
+    /**
+     *  Draft,
         Submitted,
         Approved,
         Rejected
+     */
+    public class DonationStatus
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

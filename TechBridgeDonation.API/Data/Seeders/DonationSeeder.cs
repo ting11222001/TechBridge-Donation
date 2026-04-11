@@ -18,7 +18,7 @@ namespace TechBridgeDonation.API.Data.Seeders
                 {
                     Id = SubmittedDonationId,
                     OrganisationId = orgId,
-                    Status = DonationStatus.Submitted,
+                    DonationStatusId = 2,  // Submitted
                     Notes = "First batch of laptops from TechCorp",
                     SubmittedAt = new DateTime(2026, 3, 15, 0, 0, 0, DateTimeKind.Utc),
                     CreatedAt = new DateTime(2026, 3, 15, 0, 0, 0, DateTimeKind.Utc),
@@ -28,7 +28,7 @@ namespace TechBridgeDonation.API.Data.Seeders
                 {
                     Id = DraftDonationId,
                     OrganisationId = orgId,
-                    Status = DonationStatus.Draft,
+                    DonationStatusId = 1, // Draft
                     Notes = null,
                     SubmittedAt = null,
                     CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),

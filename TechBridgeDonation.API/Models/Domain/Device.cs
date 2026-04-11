@@ -12,8 +12,16 @@
         public string Brand { get; set; }
         public string Model { get; set; }
 
+
+        // FK → DeviceCondition table
+        public int DeviceConditionId { get; set; }
         public DeviceCondition Condition { get; set; }
+
+
+        // FK → DeviceStatus table
+        public int DeviceStatusId { get; set; }
         public DeviceStatus Status { get; set; }
+
 
         // FK → Organisation (refurb partner)
         public Guid? AssignedRefurbPartnerId { get; set; }
@@ -27,23 +35,25 @@
 
         // FK → User who changed status
         public Guid? StatusChangedBy { get; set; }
-        //public User StatusChangedByUser { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }  // soft delete
     }
 
-    public enum DeviceCondition
-    {
-        Good,
+    /**
+     *  Good,
         Fair,
         Poor
+     */
+    public class DeviceCondition
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
-    public enum DeviceStatus
-    {
-        Draft,
+    /**
+     *  Draft,
         Submitted,
         Approved,
         AssignedForWipe,
@@ -54,5 +64,10 @@
         Delivered,
         Closed,
         Rejected
+     */
+    public class DeviceStatus
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

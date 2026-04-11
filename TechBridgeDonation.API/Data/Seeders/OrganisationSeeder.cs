@@ -16,7 +16,7 @@ public static class OrganisationSeeder
             {
                 Id = DonorOrgId,
                 Name = "TechCorp Pty Ltd",
-                Type = OrganisationType.BusinessDonor,
+                OrganisationTypeId = 1, // BusinessDonor
                 ContactEmail = "donate@techcorp.com.au",
                 ContactPhone = "0412345678",
                 Address = "1 King William St, Adelaide SA 5000",
@@ -27,7 +27,7 @@ public static class OrganisationSeeder
             {
                 Id = RefurbOrgId,
                 Name = "Refurb Adelaide",
-                Type = OrganisationType.RefurbPartner,
+                OrganisationTypeId = 2, // RefurbPartner
                 ContactEmail = "hello@refurbadelaide.org.au",
                 CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc),
                 UpdatedAt = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc)

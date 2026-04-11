@@ -4,6 +4,9 @@
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+
+        // FK → OrganisationType table
+        public int OrganisationTypeId { get; set; }
         public OrganisationType Type { get; set; }
         public string ContactEmail { get; set; }
         public string? ContactPhone { get; set; }
@@ -18,10 +21,14 @@
         public ICollection<Device> AssignedDevices { get; set; }    // devices assigned to this org (refurb partner): "one device can be assigned to one refurb partner" relationship
     }
 
-    public enum OrganisationType
-    {
-        BusinessDonor,
+    /**
+     *  BusinessDonor,
         RefurbPartner,
         RequestPartner
+     */
+    public class OrganisationType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

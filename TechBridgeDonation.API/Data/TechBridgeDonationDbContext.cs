@@ -10,5 +10,9 @@ namespace TechBridgeDonation.API.Data
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Device> Devices { get; set; }
         public DbSet<Organisation> Organisations { get; set; }
+        public DbSet<DeviceCondition> DeviceConditions { get; set; }
+        public DbSet<DeviceStatus> DeviceStatuses { get; set; }
+        public DbSet<OrganisationType> OrganisationTypes { get; set; }
+        public DbSet<DonationStatus> DonationStatuses { get; set; }
     }
 }

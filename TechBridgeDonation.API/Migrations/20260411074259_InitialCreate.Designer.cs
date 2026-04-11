@@ -12,8 +12,8 @@ using TechBridgeDonation.API.Data;
 namespace TechBridgeDonation.API.Migrations
 {
     [DbContext(typeof(TechBridgeDonationDbContext))]
-    [Migration("20260410103924_RenameAssignedPartnerId")]
-    partial class RenameAssignedPartnerId
+    [Migration("20260411074259_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,14 +38,17 @@ namespace TechBridgeDonation.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Condition")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DeviceConditionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DeviceStatusId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("DeviceType")
                         .IsRequired()
@@ -60,9 +63,6 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.Property<bool>("RefurbCompleted")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("StatusChangedAt")
                         .HasColumnType("timestamp with time zone");
@@ -83,9 +83,47 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasIndex("AssignedRefurbPartnerId");
 
+                    b.HasIndex("DeviceConditionId");
+
+                    b.HasIndex("DeviceStatusId");
+
                     b.HasIndex("DonationId");
 
                     b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.DeviceCondition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeviceConditions");
+                });
+
+            modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.DeviceStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeviceStatuses");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Donation", b =>
@@ -97,14 +135,14 @@ namespace TechBridgeDonation.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("DonationStatusId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
                     b.Property<Guid>("OrganisationId")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("SubmittedAt")
                         .HasColumnType("timestamp with time zone");
@@ -114,9 +152,28 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DonationStatusId");
+
                     b.HasIndex("OrganisationId");
 
                     b.ToTable("Donations");
+                });
+
+            modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.DonationStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DonationStatuses");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Organisation", b =>
@@ -145,7 +202,7 @@ namespace TechBridgeDonation.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("OrganisationTypeId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -153,7 +210,26 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganisationTypeId");
+
                     b.ToTable("Organisations");
+                });
+
+            modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.OrganisationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrganisationTypes");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Device", b =>
@@ -161,6 +237,18 @@ namespace TechBridgeDonation.API.Migrations
                     b.HasOne("TechBridgeDonation.API.Models.Domain.Organisation", "AssignedRefurbPartner")
                         .WithMany("AssignedDevices")
                         .HasForeignKey("AssignedRefurbPartnerId");
+
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceCondition", "Condition")
+                        .WithMany()
+                        .HasForeignKey("DeviceConditionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("DeviceStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TechBridgeDonation.API.Models.Domain.Donation", "Donation")
                         .WithMany("Devices")
@@ -170,18 +258,41 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.Navigation("AssignedRefurbPartner");
 
+                    b.Navigation("Condition");
+
                     b.Navigation("Donation");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Donation", b =>
                 {
-                    b.HasOne("TechBridgeDonation.API.Models.Domain.Organisation", "Organisation")
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.DonationStatus", "Status")
                         .WithMany()
+                        .HasForeignKey("DonationStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.Organisation", "Organisation")
+                        .WithMany("Donations")
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organisation");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Organisation", b =>
+                {
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.OrganisationType", "Type")
+                        .WithMany()
+                        .HasForeignKey("OrganisationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Donation", b =>
@@ -192,6 +303,8 @@ namespace TechBridgeDonation.API.Migrations
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Organisation", b =>
                 {
                     b.Navigation("AssignedDevices");
+
+                    b.Navigation("Donations");
                 });
 #pragma warning restore 612, 618
         }

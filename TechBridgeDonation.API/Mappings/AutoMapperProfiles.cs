@@ -11,6 +11,8 @@ namespace TechBridgeDonation.API.Mappings
             CreateMap<Organisation, OrganisationDto>().ReverseMap();
             CreateMap<AddOrganisationRequestDto, Organisation>().ReverseMap();
             CreateMap<UpdateOrganisationRequestDto, Organisation>().ReverseMap();
+            CreateMap<AddDeviceRequestDto, Device>().ReverseMap();
+            CreateMap<UpdateDeviceRequestDto, Device>().ReverseMap();
         }
     }
 }

@@ -18,8 +18,8 @@ namespace TechBridgeDonation.API.Data.Seeders
                     DeviceType = "Laptop",
                     Brand = "Dell",
                     Model = "Latitude 5490",
-                    Condition = DeviceCondition.Good,
-                    Status = DeviceStatus.Submitted,
+                    DeviceConditionId = 1,  // Good
+                    DeviceStatusId = 2,     // Submitted
                     AssignedRefurbPartnerId = refurbPartnerId,
                     TechnicalNotes = "Missing charger",
                     WipeCompleted = false,
@@ -34,8 +34,8 @@ namespace TechBridgeDonation.API.Data.Seeders
                     DeviceType = "Tablet",
                     Brand = "Lenovo",
                     Model = "Tab M10",
-                    Condition = DeviceCondition.Fair,
-                    Status = DeviceStatus.Approved,
+                    DeviceConditionId = 2,  // Fair
+                    DeviceStatusId = 3,     // Approved
                     AssignedRefurbPartnerId = refurbPartnerId,
                     TechnicalNotes = null,
                     WipeCompleted = true,
