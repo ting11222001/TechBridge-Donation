@@ -19,6 +19,7 @@ builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
 
 // Inject repositories
 builder.Services.AddScoped<IOrganisationRepository, SQLOrganisationRepository>();
+builder.Services.AddScoped<IDeviceRepository, SQLDeviceRepository>();
 
 // Inject automapper
 builder.Services.AddAutoMapper(configuration => configuration.AddProfile<AutoMapperProfiles>());

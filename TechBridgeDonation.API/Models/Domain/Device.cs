@@ -15,12 +15,12 @@
 
         // FK → DeviceCondition table
         public int DeviceConditionId { get; set; }
-        public DeviceCondition Condition { get; set; }
+        public DeviceCondition DeviceCondition { get; set; }
 
 
         // FK → DeviceStatus table
         public int DeviceStatusId { get; set; }
-        public DeviceStatus Status { get; set; }
+        public DeviceStatus DeviceStatus { get; set; }
 
 
         // FK → Organisation (refurb partner)

@@ -235,13 +235,13 @@ namespace TechBridgeDonation.API.Migrations
                         .WithMany("AssignedDevices")
                         .HasForeignKey("AssignedRefurbPartnerId");
 
-                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceCondition", "Condition")
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceCondition", "DeviceCondition")
                         .WithMany()
                         .HasForeignKey("DeviceConditionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceStatus", "Status")
+                    b.HasOne("TechBridgeDonation.API.Models.Domain.DeviceStatus", "DeviceStatus")
                         .WithMany()
                         .HasForeignKey("DeviceStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,11 +255,11 @@ namespace TechBridgeDonation.API.Migrations
 
                     b.Navigation("AssignedRefurbPartner");
 
-                    b.Navigation("Condition");
+                    b.Navigation("DeviceCondition");
+
+                    b.Navigation("DeviceStatus");
 
                     b.Navigation("Donation");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("TechBridgeDonation.API.Models.Domain.Donation", b =>
