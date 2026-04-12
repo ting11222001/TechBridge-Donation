@@ -66,16 +66,26 @@ namespace TechBridgeDonation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
         {
-            // Map DTO to Domain Model (with AutoMapper)
-            var organisationDomainModel = mapper.Map<Organisation>(addOrganisationRequestDto);
+            // Added Model Validation using Data Annotations in the AddOrganisationRequestDto
+            if (ModelState.IsValid)
+            {
+                // If the model state is valid, we can proceed with creating the organisation
+                // Map DTO to Domain Model (with AutoMapper)
+                var organisationDomainModel = mapper.Map<Organisation>(addOrganisationRequestDto);
 
-            // Use Domain Model to create Organisation
-            organisationDomainModel = await organisationRepository.CreateAsync(organisationDomainModel);
+                // Use Domain Model to create Organisation
+                organisationDomainModel = await organisationRepository.CreateAsync(organisationDomainModel);
 
-            // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
-            var organisationDto = mapper.Map<OrganisationDto>(organisationDomainModel);
+                // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
+                var organisationDto = mapper.Map<OrganisationDto>(organisationDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
+                return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
+            }
+            else
+            {
+                // If the model state is invalid, we return a Bad Request response with the validation errors
+                return BadRequest(ModelState);
+            }
         }
 
         // PUT to Update Organisation
@@ -84,23 +94,32 @@ namespace TechBridgeDonation.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
         {
-            // Map DTO to Domain Model
-            var updateOrganisationDomainModel = mapper.Map<Organisation>(updateOrganisationRequestDto);
-
-            var updatedOrganisationDomainModel = await organisationRepository.UpdateAsync(id, updateOrganisationDomainModel);
-
-            if (updatedOrganisationDomainModel == null)
+            // Added Model Validation using Data Annotations in the UpdateOrganisationRequestDto
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                // Map DTO to Domain Model
+                var updateOrganisationDomainModel = mapper.Map<Organisation>(updateOrganisationRequestDto);
+
+                var updatedOrganisationDomainModel = await organisationRepository.UpdateAsync(id, updateOrganisationDomainModel);
+
+                if (updatedOrganisationDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+                // Return the updated Organistaion back to client
+                // Map Domain Model to DTO (with AutoMapper)
+                var organisationDto = mapper.Map<OrganisationDto>(updatedOrganisationDomainModel);
+
+
+                // Return DTOs
+                return Ok(organisationDto);
+            }
+            else
+            {
+                return BadRequest(ModelState);
             }
 
-            // Return the updated Organistaion back to client
-            // Map Domain Model to DTO (with AutoMapper)
-            var organisationDto = mapper.Map<OrganisationDto>(updatedOrganisationDomainModel);
-
-
-            // Return DTOs
-            return Ok(organisationDto);
         }
 
         // Delete one Organisation

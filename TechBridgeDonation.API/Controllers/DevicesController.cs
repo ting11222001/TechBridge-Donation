@@ -67,16 +67,23 @@ namespace TechBridgeDonation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddDeviceRequestDto addDeviceRequestDto)
         {
-            // Map DTO to Domain Model (with AutoMapper)
-            var deviceDomainModel = mapper.Map<Device>(addDeviceRequestDto);
+            if (ModelState.IsValid)
+            {
+                // Map DTO to Domain Model (with AutoMapper)
+                var deviceDomainModel = mapper.Map<Device>(addDeviceRequestDto);
 
-            // Use Domain Model to create Device
-            deviceDomainModel = await deviceRepository.CreateAsync(deviceDomainModel);
+                // Use Domain Model to create Device
+                deviceDomainModel = await deviceRepository.CreateAsync(deviceDomainModel);
 
-            // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
-            var deviceDto = mapper.Map<DeviceDto>(deviceDomainModel);
+                // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
+                var deviceDto = mapper.Map<DeviceDto>(deviceDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = deviceDto.Id }, deviceDto);
+                return CreatedAtAction(nameof(GetById), new { id = deviceDto.Id }, deviceDto);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
 
@@ -86,22 +93,29 @@ namespace TechBridgeDonation.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateDeviceRequestDto updateDeviceRequestDto)
         {
-            // Map DTO to Domain Model
-            var updateDeviceDomainModel = mapper.Map<Device>(updateDeviceRequestDto);
-
-            var updatedDeviceDomainModel = await deviceRepository.UpdateAsync(id, updateDeviceDomainModel);
-
-            if (updatedDeviceDomainModel == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                // Map DTO to Domain Model
+                var updateDeviceDomainModel = mapper.Map<Device>(updateDeviceRequestDto);
+
+                var updatedDeviceDomainModel = await deviceRepository.UpdateAsync(id, updateDeviceDomainModel);
+
+                if (updatedDeviceDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+                // Return the updated Device back to client
+                // Map Domain Model to DTO (with AutoMapper)
+                var deviceDto = mapper.Map<DeviceDto>(updatedDeviceDomainModel);
+
+                // Return DTOs
+                return Ok(deviceDto);
             }
-
-            // Return the updated Device back to client
-            // Map Domain Model to DTO (with AutoMapper)
-            var deviceDto = mapper.Map<DeviceDto>(updatedDeviceDomainModel);
-
-            // Return DTOs
-            return Ok(deviceDto);
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // Delete one Device
