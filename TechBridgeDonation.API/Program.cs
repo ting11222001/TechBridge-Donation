@@ -13,6 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Temporarily disable automatic model state validation to allow custom error responses
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
+
 // database (PostgreSQL) connection
 builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TechBridgeDonationConnectionString")));

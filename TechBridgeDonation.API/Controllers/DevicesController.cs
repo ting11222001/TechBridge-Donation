@@ -82,7 +82,7 @@ namespace TechBridgeDonation.API.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
         }
 
@@ -114,7 +114,7 @@ namespace TechBridgeDonation.API.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
         }
 
