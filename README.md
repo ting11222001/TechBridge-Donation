@@ -21,6 +21,7 @@ Swagger endpoint list:
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [What's Built](#whats-built)
+- [Engineering Highlights](#engineering-highlights)
 - [In Progress](#in-progress)
 
 
@@ -50,23 +51,19 @@ Business Donor · Refurb Partner · School / NGO · Admin
 
 There are four user roles in the system:
 
-**Admin**: Program operators who manage the full workflow. They approve donations, assign devices to refurbishment partners, match devices to requests, and have access to audit logs and reports.
-
-**Business Donor**: Companies donating end-of-life devices. They can register their organisation, create a donation, and add devices before submission. After approval, they can only view status.
-
-**Refurb Partner**: IT recyclers or repair shops. They see only devices assigned to them, update wipe and refurbishment status, and add technical notes.
-
-**Request Partner**: Schools or NGOs submitting requests on behalf of students. They submit requests with student count and specs needed, view request status, and confirm receipt of devices.
+| Role | Who | What they can do |
+|---|---|---|
+| Admin | Program operators | Approve donations, assign devices, match requests, view audit logs |
+| Business Donor | Companies donating devices | Create donations, add devices, view status after approval |
+| Refurb Partner | IT recyclers or repair shops | Update wipe and refurb status, add technical notes |
+| Request Partner | Schools or NGOs | Submit requests, view status, confirm device receipt |
 
 > Admins can see everything. Everyone else sees only what they own or are assigned to.
 
-
-
 ## Tech Stack
 
-- ASP.NET Core Web API built with .NET 8
-- PostgreSQL
-
+- ASP.NET Core Web API (.NET 8)
+- EF Core + PostgreSQL
 
 
 ## Getting Started
@@ -80,24 +77,33 @@ There are four user roles in the system:
 
 ## What's Built
 
-- ASP.NET Core Web API (.NET 8)
-- EF Core + PostgreSQL (with data seeding and migrations)
+- Data seeding and migrations: 
+	- Migrations run automatically on startup via `MigrateAsync()`. 
+	- Seed data is applied once using existence checks to prevent duplicates.
 - Domain models: Device, Donation, Organisation
 - DbContext configured with PostgreSQL connection via User Secrets
 - Database tables created via EF Core migrations
 - Seed data for Organisations, Devices, and Donations
 - OrganisationsController with GET all and GET by ID endpoints
+- Repository pattern with interfaces
+- AutoMapper (domain → DTO)
+- Swagger UI with Bearer token support
+
+
+## Engineering Highlights
+
+- **Async controllers**: All action methods use `async/await`, so the API does not block threads while waiting for the database.
+- **DTO layer**: DTOs control what data enters and leaves the API. The flow is `client → DTO → controller → domain model → database`, which keeps the database schema separate from the API contract.
+- **Repository pattern**: A repository interface sits between the controller and the database. This separates data access from business logic and makes the code easier to test.
+- **Model validation**: Custom validation attributes added directly in the controllers reject bad input before it reaches the database.
 
 
 
 ## In Progress
 
-- Repository pattern with interfaces
-- AutoMapper (domain → DTO)
 - CRUD endpoints: Organisations, Devices
 - JWT authentication (register + login)
 - Role-based authorization (Admin / Viewer)
-- Swagger UI with Bearer token support
 - Filtering, sorting, pagination on Devices
 - React frontend
 - Railway deployment
