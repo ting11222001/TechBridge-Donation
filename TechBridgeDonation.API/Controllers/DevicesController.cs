@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using TechBridgeDonation.API.CustomActionFilters;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Models.Domain;
 using TechBridgeDonation.API.Models.DTO;
@@ -65,25 +66,20 @@ namespace TechBridgeDonation.API.Controllers
         // POST to Create New Device
         // POST: https://localhost:portnumber/api/organisations
         [HttpPost]
+        [ValidateModel]  // Rules in AddDeviceRequestDto
         public async Task<IActionResult> Create([FromBody] AddDeviceRequestDto addDeviceRequestDto)
         {
-            if (ModelState.IsValid)
-            {
-                // Map DTO to Domain Model (with AutoMapper)
-                var deviceDomainModel = mapper.Map<Device>(addDeviceRequestDto);
+            // Map DTO to Domain Model (with AutoMapper)
+            var deviceDomainModel = mapper.Map<Device>(addDeviceRequestDto);
 
-                // Use Domain Model to create Device
-                deviceDomainModel = await deviceRepository.CreateAsync(deviceDomainModel);
+            // Use Domain Model to create Device
+            deviceDomainModel = await deviceRepository.CreateAsync(deviceDomainModel);
 
-                // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
-                var deviceDto = mapper.Map<DeviceDto>(deviceDomainModel);
+            // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
+            var deviceDto = mapper.Map<DeviceDto>(deviceDomainModel);
 
-                return CreatedAtAction(nameof(GetById), new { id = deviceDto.Id }, deviceDto);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            return CreatedAtAction(nameof(GetById), new { id = deviceDto.Id }, deviceDto);
+
         }
 
 
@@ -91,31 +87,26 @@ namespace TechBridgeDonation.API.Controllers
         // PUT: https://localhost:portnumber/api/devices/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]  // Rules in UpdateDeviceRequestDto
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateDeviceRequestDto updateDeviceRequestDto)
         {
-            if (ModelState.IsValid)
+            // Map DTO to Domain Model
+            var updateDeviceDomainModel = mapper.Map<Device>(updateDeviceRequestDto);
+
+            var updatedDeviceDomainModel = await deviceRepository.UpdateAsync(id, updateDeviceDomainModel);
+
+            if (updatedDeviceDomainModel == null)
             {
-                // Map DTO to Domain Model
-                var updateDeviceDomainModel = mapper.Map<Device>(updateDeviceRequestDto);
-
-                var updatedDeviceDomainModel = await deviceRepository.UpdateAsync(id, updateDeviceDomainModel);
-
-                if (updatedDeviceDomainModel == null)
-                {
-                    return NotFound();
-                }
-
-                // Return the updated Device back to client
-                // Map Domain Model to DTO (with AutoMapper)
-                var deviceDto = mapper.Map<DeviceDto>(updatedDeviceDomainModel);
-
-                // Return DTOs
-                return Ok(deviceDto);
+                return NotFound();
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            // Return the updated Device back to client
+            // Map Domain Model to DTO (with AutoMapper)
+            var deviceDto = mapper.Map<DeviceDto>(updatedDeviceDomainModel);
+
+            // Return DTOs
+            return Ok(deviceDto);
+
         }
 
         // Delete one Device

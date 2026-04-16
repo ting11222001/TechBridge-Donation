@@ -561,7 +561,7 @@ Phase 1:
 
 `[ApiController]` automatically returns a detailed 400 before your action runs, so `BadRequest()` and `BadRequest(ModelState)` look the same unless you suppress that behaviour.
 
----
+
 
 ### The validation rule (example from AddDeviceRequestDto)
 
@@ -585,7 +585,6 @@ Send a `DeviceType` of `"1"`, which is shorter than 3 characters:
 }
 ```
 
----
 
 ### What [ApiController] returns automatically (before your code runs)
 
@@ -603,7 +602,6 @@ Send a `DeviceType` of `"1"`, which is shorter than 3 characters:
 }
 ```
 
----
 
 ### How to see the difference manually (debug only)
 
@@ -640,13 +638,42 @@ Now your `if (ModelState.IsValid)` block runs. Remove this after testing.
 }
 ```
 
----
 
 ### Key points
 
 - `[ApiController]` handles validation before your action runs. Your `if (ModelState.IsValid)` block is never reached.
 - `BadRequest(ModelState)` is better than `BadRequest()` if you ever handle validation manually, because the client knows which field failed.
-- The `[ValidateModel]` custom filter in some tutorials is just a design choice. It does the same thing `[ApiController]` already does.
+
+
+### ValidateModelAttribute
+
+Later on I tried something more advanced, which is to add a custom validate model attribute as below.
+
+Note that:
+- The `[ValidateModel]` custom filter does the same thing `BadRequest(ModelState)` already does.
+
+For example, deliberately failing the device type in the payload:
+```json
+{
+  "donationId": "eb49109e-b53d-4638-be17-9c624162c467",
+  "deviceType": "1",
+  "brand": "string",
+  "model": "string",
+  "deviceConditionId": 0,
+  "deviceStatusId": 0
+}
+```
+
+It will give the same shape of error message as `BadRequest(ModelState)`:
+```json
+{
+  "DeviceType": [
+    "Device Type has to be a minimum of 3 characters"
+  ]
+}
+```
+
+So I can use `[ValidateModel]` in the controller, and remove all the if (ModelState.IsValid) blocks, which makes the code cleaner.
 
 <!-- --- -->
 
@@ -656,6 +683,7 @@ Now your `if (ModelState.IsValid)` block runs. Remove this after testing.
 - Controllers: Implemented Async Await in the action methods.
 - DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers, so client --> DTO --> APIs in controller --> domain model --> database.
 - Repository: Implemented to separate the data acess layr from the application, so controller --> repository --> database.
+- Custome Validate Model: Added in the controllers
 
 
 

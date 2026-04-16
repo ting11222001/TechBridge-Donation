@@ -19,7 +19,6 @@ Swagger endpoint list:
 - [What This Platform Does](#what-this-platform-does)
 - [Roles and Users](#roles-and-users)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
 - [What's Built](#whats-built)
 - [Engineering Highlights](#engineering-highlights)
 - [In Progress](#in-progress)
@@ -66,25 +65,16 @@ There are four user roles in the system:
 - EF Core + PostgreSQL
 
 
-## Getting Started
-
-1. Clone the repo
-2. Update `appsettings.json` with your connection string
-3. Run `dotnet ef database update`
-4. Run `dotnet run`
-
-
-
 ## What's Built
 
+- Database tables created via EF Core migrations
 - Data seeding and migrations: 
 	- Migrations run automatically on startup via `MigrateAsync()`. 
 	- Seed data is applied once using existence checks to prevent duplicates.
+	- Seeded data for Organisations, Devices, and Donations (also Device Condition, Device Status, Organisation Type, Donation Status)
 - Domain models: Device, Donation, Organisation
 - DbContext configured with PostgreSQL connection via User Secrets
-- Database tables created via EF Core migrations
-- Seed data for Organisations, Devices, and Donations
-- OrganisationsController with GET all and GET by ID endpoints
+- CRUD endpoints: Organisations, Devices
 - Repository pattern with interfaces
 - AutoMapper (domain → DTO)
 - Swagger UI with Bearer token support
@@ -98,10 +88,8 @@ There are four user roles in the system:
 - **Model validation**: Custom validation attributes added directly in the controllers reject bad input before it reaches the database.
 
 
-
 ## In Progress
 
-- CRUD endpoints: Organisations, Devices
 - JWT authentication (register + login)
 - Role-based authorization (Admin / Viewer)
 - Filtering, sorting, pagination on Devices

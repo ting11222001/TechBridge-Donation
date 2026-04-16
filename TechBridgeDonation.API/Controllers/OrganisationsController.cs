@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using TechBridgeDonation.API.CustomActionFilters;
 using TechBridgeDonation.API.Data;
 using TechBridgeDonation.API.Models.Domain;
 using TechBridgeDonation.API.Models.DTO;
@@ -64,61 +65,47 @@ namespace TechBridgeDonation.API.Controllers
         // POST to Create New Organisation
         // POST: https://localhost:portnumber/api/organisations
         [HttpPost]
+        [ValidateModel] // Rules in AddOrganisationRequestDto
         public async Task<IActionResult> Create([FromBody] AddOrganisationRequestDto addOrganisationRequestDto)
         {
-            // Added Model Validation using Data Annotations in the AddOrganisationRequestDto
-            if (ModelState.IsValid)
-            {
-                // If the model state is valid, we can proceed with creating the organisation
-                // Map DTO to Domain Model (with AutoMapper)
-                var organisationDomainModel = mapper.Map<Organisation>(addOrganisationRequestDto);
+            // Map DTO to Domain Model (with AutoMapper)
+            var organisationDomainModel = mapper.Map<Organisation>(addOrganisationRequestDto);
 
-                // Use Domain Model to create Organisation
-                organisationDomainModel = await organisationRepository.CreateAsync(organisationDomainModel);
+            // Use Domain Model to create Organisation
+            organisationDomainModel = await organisationRepository.CreateAsync(organisationDomainModel);
 
-                // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
-                var organisationDto = mapper.Map<OrganisationDto>(organisationDomainModel);
+            // Map Domain Model back to DTO to send the result back to frontend (with AutoMapper)
+            var organisationDto = mapper.Map<OrganisationDto>(organisationDomainModel);
 
-                return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
-            }
-            else
-            {
-                // If the model state is invalid, we return a Bad Request response with the validation errors
-                return BadRequest(ModelState);
-            }
+            return CreatedAtAction(nameof(GetById), new { id = organisationDto.Id }, organisationDto);
+
         }
 
         // PUT to Update Organisation
         // PUT: https://localhost:portnumber/api/organisations/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel] // Rules in UpdateOrganisationRequestDto
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateOrganisationRequestDto updateOrganisationRequestDto)
         {
-            // Added Model Validation using Data Annotations in the UpdateOrganisationRequestDto
-            if (ModelState.IsValid)
+
+            // Map DTO to Domain Model
+            var updateOrganisationDomainModel = mapper.Map<Organisation>(updateOrganisationRequestDto);
+
+            var updatedOrganisationDomainModel = await organisationRepository.UpdateAsync(id, updateOrganisationDomainModel);
+
+            if (updatedOrganisationDomainModel == null)
             {
-                // Map DTO to Domain Model
-                var updateOrganisationDomainModel = mapper.Map<Organisation>(updateOrganisationRequestDto);
-
-                var updatedOrganisationDomainModel = await organisationRepository.UpdateAsync(id, updateOrganisationDomainModel);
-
-                if (updatedOrganisationDomainModel == null)
-                {
-                    return NotFound();
-                }
-
-                // Return the updated Organistaion back to client
-                // Map Domain Model to DTO (with AutoMapper)
-                var organisationDto = mapper.Map<OrganisationDto>(updatedOrganisationDomainModel);
-
-
-                // Return DTOs
-                return Ok(organisationDto);
+                return NotFound();
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            // Return the updated Organistaion back to client
+            // Map Domain Model to DTO (with AutoMapper)
+            var organisationDto = mapper.Map<OrganisationDto>(updatedOrganisationDomainModel);
+
+
+            // Return DTOs
+            return Ok(organisationDto);
 
         }
 
