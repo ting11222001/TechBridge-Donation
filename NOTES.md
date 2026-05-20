@@ -2,7 +2,7 @@
 
 Use PostgreSQL.
 
-<!-- --- -->
+
 
 ## NuGet package
 ```
@@ -13,7 +13,7 @@ Right click on "Dependencies" and install `Npgsql.EntityFrameworkCore.PostgreSQL
 
 Also install 8.0.11 version of `Microsoft.EntityFrameworkCore.Tools`.
 
-<!-- --- -->
+
 
 ## Setup PostgreSQL database locally 
 
@@ -53,7 +53,7 @@ Click Test Connection.
 
 Click Finish. The database should show in the left panel.
 
-<!-- --- -->
+
 
 ## Program.cs
 ```
@@ -61,7 +61,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 ```
 
-<!-- --- -->
+
 
 ## User Secrets (local dev)
 
@@ -78,7 +78,7 @@ Secrets are saved to:
 
 `appsettings.json` keeps an empty connection string. .NET merges both at runtime.
 
-<!-- --- -->
+
 
 ## Run EF Core migrations
 
@@ -111,7 +111,7 @@ dev_techbridge_donation
                     └── __EFMigrationsHistory
 ```
 
-<!-- --- -->
+
 ## To create an empty API controller in Visual Studio:
 
 Right-click the Controllers folder in TechBridgeDonation.API:
@@ -298,7 +298,7 @@ builder.Services.AddDbContext<TechBridgeDonationDbContext>(options =>
 | `TechBridgeDonationDbContext` | Service to inject |
 | `options => options.UseNpgsql(...)` | How to configure/create it |
 
-<!-- --- -->
+
 
 ## OrganisationsController
 
@@ -364,7 +364,7 @@ public OrganisationsController(TechBridgeDonationDbContext dbContext)
 
 ASP.NET Core's dependency injection (DI) container creates the `TechBridgeDonationDbContext` and passes it in automatically. The controller does not need to create it manually. This keeps the code loosely coupled and easy to test.
 
-<!-- --- -->
+
 
 ## Seeding database
 
@@ -380,7 +380,7 @@ SeedAsync()        → hits if (db.Donations.Any())
 App continues
 ```
 
-<!-- --- -->
+
 
 ## Route constraints in Controllers
 
@@ -388,7 +388,7 @@ App continues
 
 `:Guid` means it only matches if the value is a valid Guid.
 
-<!-- --- -->
+
 
 
 ## async/await in ASP.NET Core
@@ -415,7 +415,7 @@ public async Task<Organisation?> GetByIdAsync(Guid id)
 }
 ```
 
-<!-- --- -->
+
 
 ## Request DTO vs Response DTO
 
@@ -435,7 +435,7 @@ public class UpdateOrganisationRequestDto { ... }
 public class OrganisationDto { public Guid Id { get; set; } ... }
 ```
 
-<!-- --- -->
+
 
 ## Implement AutoMapper
 
@@ -498,7 +498,7 @@ var organisationDto = mapper.Map<OrganisationDto>(organisationDomain);
 AutoMapper reads the profile and handles the property copying automatically.
 
 
-<!-- --- -->
+
 
 ## 
 
@@ -543,7 +543,7 @@ Update-Database
 Open the `Organisations` table and hit `refresh` to confirm if the new row is inserted.
 
 
-<!-- --- -->
+
 
 ## Domain Model Relationships
 
@@ -555,7 +555,7 @@ Phase 1:
 - **One device belongs to one donation**
 - **One device can be assigned to one refurb partner (organisation)**
 
-<!-- --- -->
+
 
 ## BadRequest() vs BadRequest(ModelState)
 
@@ -675,7 +675,7 @@ It will give the same shape of error message as `BadRequest(ModelState)`:
 
 So I can use `[ValidateModel]` in the controller, and remove all the if (ModelState.IsValid) blocks, which makes the code cleaner.
 
-<!-- --- -->
+
 
 
 ## Engineering Highlights
@@ -684,8 +684,3 @@ So I can use `[ValidateModel]` in the controller, and remove all the if (ModelSt
 - DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers, so client --> DTO --> APIs in controller --> domain model --> database.
 - Repository: Implemented to separate the data acess layr from the application, so controller --> repository --> database.
 - Custome Validate Model: Added in the controllers
-
-
-
-
-
