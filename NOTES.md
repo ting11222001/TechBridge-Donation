@@ -65,7 +65,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 ## User Secrets (local dev)
 
-Stores the DB connection string outside the project — never goes to git.
+Stores the DB connection string outside the project, never goes to git.
 ```bash
 # Run inside TechBridgeDonation.API/
 dotnet user-secrets init
@@ -500,7 +500,7 @@ AutoMapper reads the profile and handles the property copying automatically.
 
 
 
-## 
+## Another way to seed data
 
 In TechBridgeDonationDbContext, add this:
 
@@ -684,3 +684,84 @@ So I can use `[ValidateModel]` in the controller, and remove all the if (ModelSt
 - DTOs: Used DTOs to define what data can be passed between the client and the APIs in Controllers, so client --> DTO --> APIs in controller --> domain model --> database.
 - Repository: Implemented to separate the data acess layr from the application, so controller --> repository --> database.
 - Custome Validate Model: Added in the controllers
+
+
+## The basic workflow in VS Code for a .NET Core API project
+
+### First time setup
+
+```bash
+cd TechBridgeDonation.API
+dotnet restore
+```
+
+### Database migrations
+
+If you haven't run migrations yet:
+```bash
+dotnet ef database update
+```
+
+If you need to create a new migration:
+```bash
+dotnet ef migrations add YourMigrationName
+dotnet ef database update
+```
+
+If `dotnet ef` is not found, install it first:
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+### Run the app
+```bash
+dotnet run
+```
+
+It will print the URL in the terminal, something like:
+```bash
+Now listening on: http://localhost:5074
+```
+
+### Open Swagger
+Go to that URL and add `/swagger`:
+```bash
+http://localhost:5074/swagger
+```
+
+The port number depends on your launchSettings.json file. You can check it at:
+```bash
+TechBridgeDonation.API/Properties/launchSettings.json
+```
+
+Look for the `applicationUrl` value there to confirm the port.
+
+Tip: Run `dotnet watch run` instead of `dotnet run` if you want the app to restart automatically when you change code.
+
+
+### Database in the docker
+
+Since I'm running PostgreSQL in a docker image, so I need the Docker container running before I run `dotnet run`.
+
+Then run the app as normal:
+```bash
+cd TechBridgeDonation.API
+dotnet run
+```
+
+The connection string `Host=localhost;Port=5432;Database=yourdb;Username=youruser;Password=yourpassword` has run in side the `TechBridgeDonation.API` folder before, so the secrets are already saved on your machine, so you do not need to redo that part. VS Code itself does not care about the database. As long as the container is running and the connection string is correct, it will work the same as Visual Studio.
+
+
+### Migrations (use these instead of the Visual Studio commands)
+
+Run these inside the `TechBridgeDonation.API/` folder, same as before:
+```bash
+# Instead of: Add-Migration "Initial Migration"
+dotnet ef migrations add "Initial Migration"
+
+# Instead of: Update-Database
+dotnet ef database update
+
+# Instead of: Drop-Database
+dotnet ef database drop
+```
